@@ -16,7 +16,8 @@ class LolSpider(scrapy.Spider):
         headers = dict()
         headers['Referer'] = 'https://lol.qq.com/web201310/info-heros.shtm'
         for url in self.start_urls:
-            yield scrapy.Request(url=url, headers=headers, callback=self.parse)
+            yield scrapy.Request(url=url, headers=headers, callback=self.parse,
+                                 )
 
     def parse(self, response):
         if response.status == 200:
@@ -27,7 +28,7 @@ class LolSpider(scrapy.Spider):
                 for hero_name in heros_json.values():
                     yield scrapy.Request(url=self.base_url.format(hero_name),
                                          callback=self.parse_skin,
-                                         meta={'hero_name': hero_name}
+                                         meta={'hero_name': hero_name},
                                          )
 
     def parse_skin(self, response):

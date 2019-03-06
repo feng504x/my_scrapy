@@ -9,16 +9,23 @@ import txmongo
 import logging
 import scrapy
 # import MySQLdb
+from scrapy import signals
+from scrapy.exceptions import DropItem
+from traceback import print_exc
 from pymongo.errors import AutoReconnect, DuplicateKeyError
 from twisted.internet import defer
 # mysql数据库的异步库
-from scrapy_spiders.tools.utils import trip_text
+from twisted.enterprise import adbapi
+from scrapy_spiders.utils import trip_text
 # from scrapy_spiders.tools import db, DBCONFIG
 from scrapy.pipelines.images import ImagesPipeline
+from scrapy_redis.connection import get_redis_from_settings
+
 logger = logging.getLogger(__name__)
 
 
 class MyImagePipeline(ImagesPipeline):
+
     def get_media_requests(self, item, info):
         if item['skin_name'] == 'default':
             item['skin_name'] = '默认皮肤'
@@ -39,6 +46,21 @@ class MyImagePipeline(ImagesPipeline):
         filename = u'{0}/{1}.jpg'.format(hero_name, skin_name)
         return filename
 
+    def item_completed(self, results, item, info):
+        """下载图片后"""
+        if isinstance(item, dict) or self.images_result_field in item.fields:
+            item[self.images_result_field] = [x for ok, x in results if ok]
+        # 下载成功设置status=1
+        item['status'] = 1
+        # 处理失败的情况, 图片下载失败默认会有retry中间件重试,重试次数后还是失败
+        if not results[0]:
+            # 将失败的信息存入redis
+            logger.error("download {} failed!!!!!!".format(item['img_url']))
+            item['status'] = 0
+
+            # raise DropItem("drop item {} !!!!!!".format(item['img_url']))
+
+        return item
 
 class BaiduSpiderPipeline(object):
     def process_item(self, item, spider):
@@ -88,19 +110,22 @@ class MongodbPipeline(object):
 
     def process_item(self, item, spider):
         # 处理数据
-        if item['desc'] is not None:
-            item['desc'] = self.process_content(item['desc'])
-        if item['author'] is not None:
-            item['author'] = trip_text(item['author'])
-        if item['title'] is not None:
-            item['title'] = trip_text(item['title'])
+        # if item['desc'] is not None:
+        #     item['desc'] = self.process_content(item['desc'])
+        # if item['author'] is not None:
+        #     item['author'] = trip_text(item['author'])
+        # if item['title'] is not None:
+        #     item['title'] = trip_text(item['title'])
         # tieba
         # if item['lou_list'] is not None:
         #     for lou_info in item['lou_list']:
         #         lou_info['author'] = trip_text(lou_info['author'])
         #         lou_info['content'] = self.process_content(lou_info['content'])
+
+        # lol爬虫下载失败的时候才保存入库
         # 异步插入数据
-        self.mongo_insert(dict(item))
+        if item['status'] == 0:
+            self.mongo_insert(dict(item))
         # 切记 一定要返回item进行后续的pipelines 数据处理
         return item
 

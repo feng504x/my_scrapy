@@ -12,6 +12,10 @@ class LolItem(scrapy.Item):
     hero_name = scrapy.Field()
     skin_name = scrapy.Field()
     img_url = scrapy.Field()
+    # 下载状态, 0为失败, 1为成功
+    status = scrapy.Field()
+    # 保存结果
+    # result = scrapy.Field()
 
 
 class TencentSpiderItem(scrapy.Item):

@@ -72,7 +72,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'scrapy_spiders.pipelines.MyImagePipeline': 300,
-   # 'scrapy_spiders.pipelines.MongodbPipeline': 300,
+   'scrapy_spiders.pipelines.MongodbPipeline': 320,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -109,7 +109,7 @@ LOG_FORMAT = '%(asctime)s [%(threadName)s %(thread)d] [%(name)s] %(levelname)s: 
 # mongodb数据库的配置
 MONGO_URI = '127.0.0.1:27017'
 MONGO_DATABASE = 'spider'
-MONGO_COLLECTION = 'dangdang'
+MONGO_COLLECTION = 'lol_fail'
 # MONGO_COLLECTION = 'circ'
 
 # 设置redis数据库
@@ -117,7 +117,7 @@ REDIS_URL = "redis://127.0.0.1:6379"
 
 
 # 设置Splash的地址
-SPLASH_URL = 'http://127.0.0.1:8050/'
+SPLASH_URL = 'http://192.168.137.136:8050/'
 # 设置Splash的去重过滤器
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 # 设置Splash的Http缓存
@@ -138,10 +138,14 @@ RETRY_TIMES = 3
 RETRY_HTTP_CODES = [500, 503, 504, 400, 408]
 
 # scrapy-redis的配置
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-SCHEDULER_PERSIST = True
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# SCHEDULER_PERSIST = True
 
 
 # 图片存储位置
 IMAGES_STORE = 'E:\scrapy_spiders\scrapy_spiders\img'
+# 过期天数
+IMAGES_EXPIRES = 90  # 90天内抓取的都不会被重抓
+# 图片下载结果的item键
+# IMAGES_RESULT_FIELD = 'result'

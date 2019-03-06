@@ -25,3 +25,17 @@
 #### 总结
 - 如果你们遇到什么问题, 可以提问
 - 如果你们觉得好用的话, 可以给我几个star, hah 
+
+#### 爬虫截图
+
+![](https://i.imgur.com/2BVaN2H.jpg)
+# spider文件
+![](https://i.imgur.com/rHgNOji.jpg)
+# pipeline文件
+![](https://i.imgur.com/kWwxKwI.jpg)
+
+![](https://i.imgur.com/bCNeTgZ.jpg)
+
+![](https://i.imgur.com/7Kz2rnZ.jpg)
+
+![](https://i.imgur.com/j282aWs.jpg)

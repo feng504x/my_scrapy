@@ -7,7 +7,7 @@ cffi==1.11.5
 chardet==3.0.4
 colorama==0.4.1
 constantly==15.1.0
-cryptography==2.5
+cryptography==3.2
 cssselect==1.0.3
 decorator==4.3.2
 get==2018.11.19

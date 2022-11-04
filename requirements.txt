@@ -45,7 +45,7 @@ scrapy-splash==0.7.2
 service-identity==18.1.0
 six==1.12.0
 traitlets==4.3.2
-Twisted==18.4.0
+Twisted==22.10.0
 txmongo==18.2.0
 urllib3==1.24.1
 w3lib==1.20.0
